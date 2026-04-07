@@ -47,7 +47,7 @@
 <body>
     <div class="container">
         <a href="../#" class="back-btn"><i class="fa-solid fa-arrow-left"></i> 返回官网</a>
-        <div id="content">正在加载教程...</div>
+        <div id="content">少女祈祷中...</div>
     </div>
 
     <script>
@@ -58,7 +58,7 @@
                 document.getElementById('content').innerHTML = marked.parse(text);
             })
             .catch(err => {
-                document.getElementById('content').innerHTML = "教程加载失败，请检查 tutorial.md 是否存在。";
+                document.getElementById('content').innerHTML = "教程加载失败，请检查 md文件 是否存在。";
             });
     </script>
 </body>
