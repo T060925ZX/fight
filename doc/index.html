@@ -46,13 +46,13 @@
 </head>
 <body>
     <div class="container">
-        <a href="../index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> 返回官网</a>
+        <a href="../#" class="back-btn"><i class="fa-solid fa-arrow-left"></i> 返回官网</a>
         <div id="content">正在加载教程...</div>
     </div>
 
     <script>
         // 读取本地或远程的 md 文件
-        fetch('tutorial.md')
+        fetch('README.md')
             .then(response => response.text())
             .then(text => {
                 document.getElementById('content').innerHTML = marked.parse(text);
