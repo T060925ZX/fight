@@ -4,352 +4,334 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fight - 释放您的枪灵</title>
-    <!-- 引入 FontAwesome 6 增强图标 -->
+    <!-- 引入 FontAwesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 引入 Google Fonts 提升排版质感 -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;500;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #8ecae6;
-            --secondary: #ffb7b2;
-            --accent: #b2fef7;
-            --buy-grad: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
-            --dl-grad: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
-            --text-main: #34495e;
-            --text-light: #95a5a6;
-            --glass: rgba(255, 255, 255, 0.4);
-            --glass-border: rgba(255, 255, 255, 0.5);
+            --primary: #00d2ff;
+            --secondary: #3a7bd5;
+            --accent-red: #ff4e50;
+            --accent-orange: #f9d423;
+            --bg-color: #0a0e14;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-main: #ffffff;
+            --text-dim: rgba(255, 255, 255, 0.6);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+            font-family: 'Plus Jakarta Sans', 'PingFang SC', sans-serif;
         }
 
         body {
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background-color: var(--bg-color);
+            color: var(--text-main);
             overflow-x: hidden;
-            background-color: #f0f4f8;
-            /* 动态流体背景效果 */
-            background-image: 
-                radial-gradient(at 0% 0%, hsla(199, 98%, 89%, 1) 0, transparent 50%), 
-                radial-gradient(at 50% 0%, hsla(3, 100%, 93%, 1) 0, transparent 50%), 
-                radial-gradient(at 100% 0%, hsla(180, 100%, 91%, 1) 0, transparent 50%), 
-                radial-gradient(at 50% 100%, hsla(220, 100%, 95%, 1) 0, transparent 50%);
-            background-size: 200% 200%;
-            animation: fluidBg 15s ease infinite;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        @keyframes fluidBg {
-            0% { background-position: 0% 0%; }
-            50% { background-position: 100% 100%; }
-            100% { background-position: 0% 0%; }
+        /* 动态背景 */
+        .bg-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(0, 210, 255, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(58, 123, 213, 0.15) 0%, transparent 40%);
+            filter: blur(80px);
         }
 
         #particles-js {
-            position: absolute;
+            position: fixed;
             width: 100%;
             height: 100%;
-            top: 0;
-            left: 0;
-            z-index: 1;
-            pointer-events: none;
+            z-index: 0;
         }
 
         .wrapper {
             position: relative;
             z-index: 10;
-            width: 90%;
-            max-width: 1100px;
-            padding: 40px 0;
-            animation: fadeInUp 1s ease-out;
+            width: 100%;
+            max-width: 1200px;
+            padding: 100px 24px;
         }
 
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* 标题区设计 */
+        /* 标题区 */
         .hero-section {
             text-align: center;
-            margin-bottom: 70px;
+            margin-bottom: 80px;
         }
 
-        .hero-section .badge {
-            background: rgba(255, 255, 255, 0.6);
-            padding: 6px 20px;
-            border-radius: 30px;
-            font-size: 13px;
-            color: var(--text-light);
-            letter-spacing: 3px;
-            border: 1px solid var(--glass-border);
+        .hero-badge {
             display: inline-block;
-            margin-bottom: 20px;
-            backdrop-filter: blur(5px);
+            padding: 8px 24px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 100px;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 2px;
+            color: var(--primary);
+            margin-bottom: 24px;
+            backdrop-filter: blur(10px);
+            animation: fadeInDown 0.8s ease-out;
         }
 
         .hero-section h1 {
-            font-size: clamp(48px, 8vw, 86px);
-            font-weight: 900;
-            background: linear-gradient(to right, #89f7fe 0%, #66a6ff 100%);
+            font-size: clamp(60px, 12vw, 120px);
+            font-weight: 800;
+            /* 修复：增加行高，确保 'g' 的尾部不被遮挡 */
+            line-height: 1.25; 
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #fff 30%, rgba(255,255,255,0.5) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 10px 15px rgba(102, 166, 255, 0.2));
             letter-spacing: -2px;
-            margin-bottom: 10px;
+            animation: fadeInUp 1s ease-out 0.2s backwards;
         }
 
         .hero-section p {
             font-size: 20px;
-            color: var(--text-main);
-            font-weight: 300;
+            color: var(--text-dim);
             letter-spacing: 6px;
-            opacity: 0.8;
+            font-weight: 300;
+            animation: fadeInUp 1s ease-out 0.4s backwards;
         }
 
-        /* 卡片阵列布局 */
+        /* 功能卡片 */
         .features-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 30px;
-            margin-bottom: 80px;
+            margin-bottom: 100px;
         }
 
         .feature-card {
-            background: var(--glass);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
+            background: var(--card-bg);
             border: 1px solid var(--glass-border);
-            border-radius: 32px;
-            padding: 50px 30px;
-            text-align: center;
-            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            border-radius: 40px;
+            padding: 60px 40px;
+            text-align: left;
+            transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            backdrop-filter: blur(20px);
             position: relative;
             overflow: hidden;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.03);
+            animation: fadeInUp 1s ease-out 0.6s backwards;
         }
 
-        /* 悬浮时的光泽流转效果 */
-        .feature-card::after {
+        .feature-card:nth-child(2) { animation-delay: 0.7s; }
+        .feature-card:nth-child(3) { animation-delay: 0.8s; }
+
+        .feature-card::before {
             content: '';
             position: absolute;
-            top: -100%;
-            left: -100%;
-            width: 300%;
-            height: 300%;
-            background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 60%);
-            opacity: 0;
-            transition: opacity 0.3s;
-            pointer-events: none;
-        }
-
-        .feature-card:hover::after {
-            opacity: 1;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.06), transparent 40%);
+            z-index: -1;
         }
 
         .feature-card:hover {
-            transform: translateY(-15px) scale(1.02);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.06);
-            background: rgba(255, 255, 255, 0.55);
+            border-color: rgba(255,255,255,0.3);
+            background: rgba(255, 255, 255, 0.05);
         }
 
-        .icon-wrapper {
-            width: 80px;
-            height: 80px;
-            background: white;
-            border-radius: 22px;
+        .icon-box {
+            width: 64px;
+            height: 64px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 30px;
-            font-size: 32px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-            transition: 0.5s ease;
-        }
-
-        .feature-card:hover .icon-wrapper {
-            transform: rotateY(180deg);
+            font-size: 28px;
+            margin-bottom: 32px;
+            color: var(--primary);
+            border: 1px solid var(--glass-border);
         }
 
         .feature-card h3 {
             font-size: 24px;
-            color: var(--text-main);
-            margin-bottom: 15px;
-            font-weight: 700;
+            margin-bottom: 16px;
+            letter-spacing: 1px;
         }
 
         .feature-card p {
-            font-size: 15px;
-            color: var(--text-light);
+            font-size: 16px;
+            color: var(--text-dim);
             line-height: 1.8;
         }
 
-        /* 按钮组 */
-        .cta-group {
+        /* 按钮设计 */
+        .cta-container {
             display: flex;
             justify-content: center;
-            gap: 25px;
+            gap: 24px;
             flex-wrap: wrap;
+            animation: fadeInUp 1s ease-out 1s backwards;
         }
 
         .btn {
             position: relative;
-            padding: 22px 50px;
-            border-radius: 24px;
+            padding: 24px 48px;
+            border-radius: 30px;
             text-decoration: none;
+            color: white;
+            font-weight: 600;
             display: flex;
-            flex-direction: column;
             align-items: center;
-            transition: all 0.3s ease;
-            min-width: 280px;
-            border: 1px solid rgba(255,255,255,0.8);
-            backdrop-filter: blur(10px);
+            gap: 16px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
-        .btn i { font-size: 24px; margin-bottom: 8px; }
-
-        .btn-download {
-            background: var(--dl-grad);
-            color: #4a6fa5;
-            box-shadow: 0 10px 30px rgba(161, 196, 253, 0.3);
+        .btn-main {
+            background: #fff;
+            color: #000;
         }
 
         .btn-buy {
-            background: var(--buy-grad);
-            color: #c0392b;
-            box-shadow: 0 10px 30px rgba(255, 154, 158, 0.3);
-            animation: pulse-red 2s infinite;
-        }
-
-        @keyframes pulse-red {
-            0% { box-shadow: 0 0 0 0 rgba(255, 154, 158, 0.4); }
-            70% { box-shadow: 0 0 0 20px rgba(255, 154, 158, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 154, 158, 0); }
+            background: linear-gradient(135deg, #ff4e50, #f9d423);
+            color: #fff;
+            box-shadow: 0 10px 40px rgba(255, 78, 80, 0.3);
         }
 
         .btn:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            filter: brightness(1.05);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
         }
 
-        .btn-text { font-size: 20px; font-weight: 800; letter-spacing: 1px; }
-        .btn-desc { font-size: 12px; opacity: 0.7; margin-top: 4px; }
+        .btn i { font-size: 20px; }
+        .btn-content { display: flex; flex-direction: column; text-align: left; }
+        .btn-title { font-size: 18px; font-weight: 800; }
+        .btn-sub { font-size: 11px; opacity: 0.8; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* 底部版权信息 */
         footer {
-            margin-top: 60px;
-            text-align: center;
-            font-size: 13px;
-            color: var(--text-light);
-            letter-spacing: 1px;
+            margin-top: 120px;
+            color: var(--text-dim);
+            font-size: 14px;
+            letter-spacing: 2px;
+            opacity: 0.5;
         }
 
-        /* 移动端优化 */
+        /* 动画 */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         @media (max-width: 992px) {
-            .features-grid { grid-template-columns: 1fr; gap: 20px; }
-            .hero-section h1 { font-size: 52px; }
-            .wrapper { padding: 40px 20px; }
+            .features-grid { grid-template-columns: 1fr; }
+            .hero-section h1 { font-size: 70px; }
+            .wrapper { padding: 60px 20px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- 粒子装饰背景 -->
+    <div class="bg-glow"></div>
     <div id="particles-js"></div>
 
     <div class="wrapper">
-        <!-- 头部展示 -->
-        <section class="hero-section">
-            <div class="badge">Fuck Everyone</div>
+        <header class="hero-section">
+            <span class="hero-badge">PREMIUM INTERACTIVE SYSTEM</span>
             <h1>Fight</h1>
             <p>释放您的枪灵 · 颠覆视界</p>
-        </section>
+        </header>
 
-        <!-- 功能展示区 -->
-        <section class="features-grid">
+        <main class="features-grid">
             <div class="feature-card">
-                <div class="icon-wrapper" style="color: #48cae4;">
-                    <i class="fa-solid fa-wand-magic-sparkles"></i>
-                </div>
-                <h3>炫酷视觉</h3>
-                <p>沉浸式 UI 交互设计<br>动态色彩映射技术<br>每一帧都是极致享受</p>
+                <div class="icon-box"><i class="fa-solid fa-bolt-lightning"></i></div>
+                <h3>极致视觉</h3>
+                <p>基于原生引擎的超低延迟渲染，为您呈现细腻丝滑的动态效果，不仅是工具，更是视觉盛宴。</p>
             </div>
 
             <div class="feature-card">
-                <div class="icon-wrapper" style="color: #ff8fa3;">
-                    <i class="fa-solid fa-microchip"></i>
-                </div>
-                <h3>独家黑科技</h3>
-                <p>毫秒级自动交互系统<br>静默算法深度优化<br>多维实体追踪技术</p>
+                <div class="icon-box"><i class="fa-solid fa-microchip"></i></div>
+                <h3>核心驱动</h3>
+                <p>自研毫秒级响应算法，支持多维实体精准追踪。静默运行优化，在幕后为您护航每一场战斗。</p>
             </div>
 
             <div class="feature-card">
-                <div class="icon-wrapper" style="color: #52b788;">
-                    <i class="fa-solid fa-shield-virus"></i>
-                </div>
-                <h3>纯净安全</h3>
-                <p>多重加密防护体系<br>无后门、无广告注入<br>为您提供最稳健的环境</p>
+                <div class="icon-box"><i class="fa-solid fa-shield-halved"></i></div>
+                <h3>安全屏障</h3>
+                <p>内核级碎片化加密体系，确保数据传输的绝对隐私。无冗余插件，打造极致纯净的使用环境。</p>
             </div>
-        </section>
+        </main>
 
-        <!-- 按钮动作区 -->
-        <section class="cta-group">
-            <a href="https://www.123912.com/s/N3EGTd-XYEpH" class="btn btn-download" target="_blank">
-                <i class="fa-solid fa-circle-arrow-down"></i>
-                <span class="btn-text">立即获取 Fight</span>
-                <span class="btn-desc">版本 V1.1 | 全球节点加速</span>
+        <section class="cta-container">
+            <a href="https://www.123912.com/s/N3EGTd-XYEpH" class="btn btn-main" target="_blank">
+                <i class="fa-solid fa-download"></i>
+                <div class="btn-content">
+                    <span class="btn-title">获取客户端</span>
+                    <span class="btn-sub">V1.1 Stable Build</span>
+                </div>
             </a>
 
             <a href="https://buy.jry0.com/shop/Cat" class="btn btn-buy" target="_blank">
-                <i class="fa-solid fa-credit-card"></i>
-                <span class="btn-text">进入卡网购买</span>
-                <span class="btn-desc">7×24小时自动发卡 · 售后保障</span>
+                <i class="fa-solid fa-fire-flame-curved"></i>
+                <div class="btn-content">
+                    <span class="btn-title">进入卡网</span>
+                    <span class="btn-sub">7×24h Instant Delivery</span>
+                </div>
             </a>
         </section>
 
         <footer>
-            &copy; 2026 Fight. 版权所有
+            &copy; 2026 FIGHT PROJECT. ALL RIGHTS RESERVED.
         </footer>
     </div>
 
-    <!-- 脚本逻辑 -->
+    <!-- 粒子脚本 -->
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <script>
-        // 粒子背景初始化
         particlesJS('particles-js', {
             "particles": {
-                "number": { "value": 40, "density": { "enable": true, "value_area": 800 } },
+                "number": { "value": 60, "density": { "enable": true, "value_area": 800 } },
                 "color": { "value": "#ffffff" },
                 "shape": { "type": "circle" },
-                "opacity": { "value": 0.3, "random": true },
-                "size": { "value": 4, "random": true },
-                "move": { "enable": true, "speed": 1.2, "direction": "top-right", "random": true, "straight": false, "out_mode": "out" }
+                "opacity": { "value": 0.1, "random": true },
+                "size": { "value": 2, "random": true },
+                "line_linked": { "enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.05, "width": 1 },
+                "move": { "enable": true, "speed": 1, "direction": "none", "random": true, "out_mode": "out" }
             },
             "interactivity": {
-                "detect_on": "canvas",
-                "events": { "onhover": { "enable": true, "mode": "bubble" } },
-                "modes": { "bubble": { "distance": 200, "size": 6, "duration": 2, "opacity": 0.6, "speed": 3 } }
+                "events": { "onhover": { "enable": true, "mode": "grab" } },
+                "modes": { "grab": { "distance": 140, "line_linked": { "opacity": 0.2 } } }
             }
         });
 
-        // 卡片鼠标跟随光泽效果
+        // 磁性卡片效果
         document.querySelectorAll('.feature-card').forEach(card => {
             card.addEventListener('mousemove', e => {
                 const rect = card.getBoundingClientRect();
-                const x = ((e.clientX - rect.left) / rect.width) * 100;
-                const y = ((e.clientY - rect.top) / rect.height) * 100;
-                card.style.setProperty('--mouse-x', `${x}%`);
-                card.style.setProperty('--mouse-y', `${y}%`);
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
                 
-                // 3D 旋转效果
-                const rotateX = (e.clientY - rect.top - rect.height / 2) / 15;
-                const rotateY = (rect.width / 2 - (e.clientX - rect.left)) / 15;
-                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-10px)`;
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = (y - centerY) / 10;
+                const rotateY = (centerX - x) / 10;
+
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-5px)`;
             });
 
             card.addEventListener('mouseleave', () => {
