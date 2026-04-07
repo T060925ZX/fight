@@ -38,7 +38,7 @@
             overflow-x: hidden;
         }
 
-        /* --- 动态高端背景层 --- */
+        /* --- 动态高端背景系统 --- */
         .bg-system {
             position: fixed;
             top: 0;
@@ -335,8 +335,9 @@
     <!-- 导航 -->
     <nav>
         <div class="nav-progress" id="progressBar"></div>
-        <a href="index.html" class="back-link">
-            <a href="../#" class="back-btn"><i class="fa-solid fa-chevron-left"></i> <span>返回中心</span>
+        <!-- 已修改跳转路径至 ../# -->
+        <a href="../#" class="back-link">
+            <i class="fa-solid fa-chevron-left"></i> <span>返回中心</span>
         </a>
         <div class="nav-logo">Fight Protocol</div>
         <div style="width: 80px;"></div>
@@ -385,7 +386,6 @@
         async function fetchDocs() {
             const contentEl = document.getElementById('content');
             try {
-                // 模拟延迟以展示平滑过渡
                 const [response] = await Promise.all([
                     fetch('README.md'),
                     new Promise(resolve => setTimeout(resolve, 600))
@@ -394,14 +394,12 @@
                 if (!response.ok) throw new Error('File not found');
                 const text = await response.text();
 
-                // 配置渲染插件
                 marked.setOptions({
                     gfm: true,
                     breaks: true,
                     headerIds: true
                 });
 
-                // 执行解析
                 contentEl.style.opacity = '0';
                 contentEl.style.transform = 'translateY(10px)';
                 
@@ -420,7 +418,7 @@
                         </div>
                         <h2 style="color: #fff; margin-bottom: 12px; background: none;">文档获取受阻</h2>
                         <p>请确保 <code>README.md</code> 放置于网站根目录下。</p>
-                        <a href="index.html" class="back-link" style="justify-content: center; width: fit-content; margin: 30px auto 0; color: var(--primary);">重新连接</a>
+                        <a href="../#" class="back-link" style="justify-content: center; width: fit-content; margin: 30px auto 0; color: var(--primary);">重新连接</a>
                     </div>
                 `;
             }
