@@ -91,7 +91,6 @@
         .hero-section h1 {
             font-size: clamp(60px, 12vw, 120px);
             font-weight: 800;
-            /* 修复：增加行高，确保 'g' 的尾部不被遮挡 */
             line-height: 1.25; 
             margin-bottom: 8px;
             background: linear-gradient(135deg, #fff 30%, rgba(255,255,255,0.5) 100%);
@@ -183,7 +182,7 @@
 
         .btn {
             position: relative;
-            padding: 24px 48px;
+            padding: 24px 40px;
             border-radius: 30px;
             text-decoration: none;
             color: white;
@@ -194,6 +193,7 @@
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             overflow: hidden;
             border: 1px solid rgba(255,255,255,0.1);
+            cursor: pointer;
         }
 
         .btn-main {
@@ -207,6 +207,12 @@
             box-shadow: 0 10px 40px rgba(255, 78, 80, 0.3);
         }
 
+        .btn-fav {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            color: #fff;
+        }
+
         .btn:hover {
             transform: translateY(-5px) scale(1.02);
             box-shadow: 0 20px 60px rgba(0,0,0,0.4);
@@ -216,6 +222,28 @@
         .btn-content { display: flex; flex-direction: column; text-align: left; }
         .btn-title { font-size: 18px; font-weight: 800; }
         .btn-sub { font-size: 11px; opacity: 0.8; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* 自定义弹窗样式 */
+        #custom-toast {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            padding: 16px 32px;
+            border-radius: 20px;
+            color: white;
+            z-index: 1000;
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            pointer-events: none;
+        }
+
+        #custom-toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
 
         footer {
             margin-top: 120px;
@@ -275,6 +303,15 @@
         </main>
 
         <section class="cta-container">
+            <!-- 收藏按钮 -->
+            <button class="btn btn-fav" onclick="handleFavorite()">
+                <i class="fa-regular fa-star"></i>
+                <div class="btn-content">
+                    <span class="btn-title">收藏本页</span>
+                    <span class="btn-sub">Add to Bookmarks</span>
+                </div>
+            </button>
+
             <a href="https://www.123912.com/s/N3EGTd-XYEpH" class="btn btn-main" target="_blank">
                 <i class="fa-solid fa-download"></i>
                 <div class="btn-content">
@@ -296,6 +333,9 @@
             &copy; 2026 FIGHT PROJECT. ALL RIGHTS RESERVED.
         </footer>
     </div>
+
+    <!-- 提示框 -->
+    <div id="custom-toast">请按 Ctrl + D 收藏本页</div>
 
     <!-- 粒子脚本 -->
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
@@ -338,6 +378,23 @@
                 card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0)`;
             });
         });
+
+        // 收藏功能逻辑
+        function handleFavorite() {
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            const toast = document.getElementById('custom-toast');
+            
+            if (isMobile) {
+                toast.innerText = "请点击浏览器菜单中的星标进行收藏";
+            } else {
+                toast.innerText = "请按下 Ctrl + D 收藏本页";
+            }
+            
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
     </script>
 </body>
 </html>
