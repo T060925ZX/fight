@@ -1,6 +1,6 @@
 # 🚀 Fight - 释放您的枪灵
 
-[![Version](https://img.shields.io/badge/Version-1.1_Stable-00d2ff.svg)](#)[![License](https://img.shields.io/badge/License-Protected-orange.svg)](#)[![Platform](https://img.shields.io/badge/Platform-Windows_10/11-blue.svg)](#)
+[![Version](https://img.shields.io/badge/Version-1.1_Stable-00d2ff.svg)](#)  [![License](https://img.shields.io/badge/License-Protected-orange.svg)](#)  [![Platform](https://img.shields.io/badge/Platform-Windows_10/11-blue.svg)](#)
 
 **Fight** 是一款专为极致视觉交互而生的系统插件。基于自研毫秒级响应引擎，为用户提供流畅、稳定且极具未来感的数字化体验。
 
