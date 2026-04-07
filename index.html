@@ -4,42 +4,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fight - 释放您的枪灵</title>
-    <!-- 引入 FontAwesome 6 -->
+    <!-- 引入外部资源 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- 引入 Google Fonts 提升排版质感 -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;500;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;500;800&family=Noto+Sans+SC:wght@300;500;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #00d2ff;
             --secondary: #3a7bd5;
             --accent-red: #ff4e50;
             --accent-orange: #f9d423;
-            --bg-color: #0a0e14;
-            --card-bg: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.1);
+            --bg-color: #07090d;
+            --card-bg: rgba(255, 255, 255, 0.02);
+            --glass-border: rgba(255, 255, 255, 0.08);
             --text-main: #ffffff;
-            --text-dim: rgba(255, 255, 255, 0.6);
+            --text-dim: rgba(255, 255, 255, 0.5);
+            --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Plus Jakarta Sans', 'PingFang SC', sans-serif;
+            font-family: 'Plus Jakarta Sans', 'Noto Sans SC', sans-serif;
         }
 
         body {
-            min-height: 100vh;
             background-color: var(--bg-color);
             color: var(--text-main);
             overflow-x: hidden;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
-        /* 动态背景 */
-        .bg-glow {
+        /* 极客感背景层 */
+        .bg-layer {
             position: fixed;
             top: 0;
             left: 0;
@@ -47,27 +47,55 @@
             height: 100%;
             z-index: -1;
             background: 
-                radial-gradient(circle at 20% 30%, rgba(0, 210, 255, 0.15) 0%, transparent 40%),
-                radial-gradient(circle at 80% 70%, rgba(58, 123, 213, 0.15) 0%, transparent 40%);
-            filter: blur(80px);
+                radial-gradient(circle at 10% 20%, rgba(0, 210, 255, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(58, 123, 213, 0.1) 0%, transparent 40%);
+        }
+
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            mask-image: radial-gradient(ellipse at center, black, transparent 80%);
         }
 
         #particles-js {
             position: fixed;
             width: 100%;
             height: 100%;
-            z-index: 0;
+            z-index: -1;
+        }
+
+        /* 页面通用布局 */
+        .page {
+            width: 100%;
+            max-width: 1300px;
+            display: none;
+            opacity: 0;
+            transform: translateY(30px) scale(0.98);
+            transition: all 0.8s var(--ease-out-expo);
+        }
+
+        .page.active {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 1;
+            transform: translateY(0) scale(1);
         }
 
         .wrapper {
-            position: relative;
-            z-index: 10;
+            padding: 120px 24px;
             width: 100%;
-            max-width: 1200px;
-            padding: 100px 24px;
         }
 
-        /* 标题区 */
+        /* 头部设计 */
         .hero-section {
             text-align: center;
             margin-bottom: 80px;
@@ -75,326 +103,463 @@
 
         .hero-badge {
             display: inline-block;
-            padding: 8px 24px;
-            background: rgba(255, 255, 255, 0.05);
+            padding: 6px 20px;
+            background: rgba(255, 255, 255, 0.03);
             border: 1px solid var(--glass-border);
             border-radius: 100px;
-            font-size: 14px;
-            font-weight: 500;
-            letter-spacing: 2px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 3px;
             color: var(--primary);
-            margin-bottom: 24px;
-            backdrop-filter: blur(10px);
-            animation: fadeInDown 0.8s ease-out;
+            margin-bottom: 30px;
+            backdrop-filter: blur(5px);
+            text-transform: uppercase;
+            animation: fadeInDown 1s var(--ease-out-expo);
         }
 
         .hero-section h1 {
-            font-size: clamp(60px, 12vw, 120px);
-            font-weight: 800;
-            line-height: 1.25; 
-            margin-bottom: 8px;
-            background: linear-gradient(135deg, #fff 30%, rgba(255,255,255,0.5) 100%);
+            font-size: clamp(80px, 15vw, 160px);
+            font-weight: 900;
+            /* 修正：增加行高确保字母 g 显示完整 */
+            line-height: 1.4; 
+            margin-bottom: 30px;
+            background: linear-gradient(to bottom, #fff 40%, rgba(255,255,255,0.2));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            letter-spacing: -2px;
-            animation: fadeInUp 1s ease-out 0.2s backwards;
+            letter-spacing: -4px;
+            animation: heroTextReveal 1.2s var(--ease-out-expo) both;
+        }
+
+        @keyframes heroTextReveal {
+            from { transform: translateY(40px); opacity: 0; filter: blur(10px); }
+            to { transform: translateY(0); opacity: 1; filter: blur(0); }
         }
 
         .hero-section p {
-            font-size: 20px;
+            font-size: 22px;
             color: var(--text-dim);
-            letter-spacing: 6px;
+            letter-spacing: 12px;
             font-weight: 300;
-            animation: fadeInUp 1s ease-out 0.4s backwards;
+            text-transform: uppercase;
+            animation: fadeIn 1.5s var(--ease-out-expo) 0.3s both;
         }
 
-        /* 功能卡片 */
+        /* 网格卡片 */
         .features-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 30px;
-            margin-bottom: 100px;
+            gap: 40px;
+            margin-bottom: 120px;
+            width: 100%;
         }
 
         .feature-card {
             background: var(--card-bg);
             border: 1px solid var(--glass-border);
-            border-radius: 40px;
-            padding: 60px 40px;
-            text-align: left;
-            transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
-            backdrop-filter: blur(20px);
+            border-radius: 32px;
+            padding: 70px 50px;
+            transition: all 0.6s var(--ease-out-expo);
+            backdrop-filter: blur(30px);
             position: relative;
             overflow: hidden;
-            animation: fadeInUp 1s ease-out 0.6s backwards;
         }
-
-        .feature-card:nth-child(2) { animation-delay: 0.7s; }
-        .feature-card:nth-child(3) { animation-delay: 0.8s; }
 
         .feature-card::before {
             content: '';
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.06), transparent 40%);
-            z-index: -1;
+            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(0, 210, 255, 0.1), transparent 50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
         }
 
+        .feature-card:hover::before { opacity: 1; }
+
         .feature-card:hover {
-            border-color: rgba(255,255,255,0.3);
-            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(0, 210, 255, 0.3);
+            background: rgba(255, 255, 255, 0.04);
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px -12px rgba(0,0,0,0.5);
         }
 
         .icon-box {
-            width: 64px;
-            height: 64px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 20px;
+            width: 70px;
+            height: 70px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 24px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 28px;
-            margin-bottom: 32px;
+            font-size: 32px;
+            margin-bottom: 40px;
             color: var(--primary);
             border: 1px solid var(--glass-border);
+            transition: transform 0.6s var(--ease-out-expo);
+        }
+
+        .feature-card:hover .icon-box {
+            transform: scale(1.1) rotate(-5deg);
+            color: #fff;
+            background: var(--primary);
+            box-shadow: 0 0 30px rgba(0, 210, 255, 0.4);
         }
 
         .feature-card h3 {
-            font-size: 24px;
-            margin-bottom: 16px;
-            letter-spacing: 1px;
+            font-size: 26px;
+            margin-bottom: 20px;
+            font-weight: 800;
         }
 
         .feature-card p {
             font-size: 16px;
             color: var(--text-dim);
             line-height: 1.8;
+            font-weight: 300;
         }
 
-        /* 按钮设计 */
+        /* 交互按钮 */
         .cta-container {
             display: flex;
             justify-content: center;
-            gap: 24px;
+            gap: 30px;
             flex-wrap: wrap;
-            animation: fadeInUp 1s ease-out 1s backwards;
         }
 
         .btn {
             position: relative;
-            padding: 24px 40px;
-            border-radius: 30px;
+            padding: 24px 50px;
+            border-radius: 24px;
             text-decoration: none;
             color: white;
-            font-weight: 600;
+            font-weight: 800;
             display: flex;
             align-items: center;
-            gap: 16px;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.1);
+            gap: 24px;
+            transition: all 0.5s var(--ease-out-expo);
+            border: 1px solid var(--glass-border);
             cursor: pointer;
+            background: rgba(255,255,255,0.02);
+            overflow: hidden;
+            min-width: 320px; /* 确保两行文字时按钮宽度美观 */
         }
 
-        .btn-main {
-            background: #fff;
-            color: #000;
-        }
-
-        .btn-buy {
-            background: linear-gradient(135deg, #ff4e50, #f9d423);
-            color: #fff;
-            box-shadow: 0 10px 40px rgba(255, 78, 80, 0.3);
-        }
-
-        .btn-fav {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            color: #fff;
-        }
+        .btn-main { background: #fff; color: #000; border: none; }
+        .btn-buy { background: linear-gradient(135deg, #ff4e50, #f9d423); color: #fff; border: none; }
 
         .btn:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 0 30px 50px rgba(0,0,0,0.5);
         }
 
-        .btn i { font-size: 20px; }
-        .btn-content { display: flex; flex-direction: column; text-align: left; }
-        .btn-title { font-size: 18px; font-weight: 800; }
-        .btn-sub { font-size: 11px; opacity: 0.8; text-transform: uppercase; letter-spacing: 1px; }
+        .btn-main:hover { background: #e0e0e0; }
 
-        /* 自定义弹窗样式 */
-        #custom-toast {
-            position: fixed;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
+        .btn i {
+            font-size: 28px;
+        }
+
+        .btn-content { 
+            display: flex; 
+            flex-direction: column; 
+            text-align: left; 
+        }
+        
+        .btn-title { 
+            display: block; 
+            font-size: 20px; 
+            margin-bottom: 2px;
+        }
+        
+        .btn-sub { 
+            display: block; 
+            font-size: 11px; 
+            opacity: 0.6; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            font-weight: 500;
+        }
+
+        /* 跳转中心页 */
+        .redirect-wrapper {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .countdown-container {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            margin-bottom: 50px;
+        }
+
+        .countdown-svg {
+            transform: rotate(-90deg);
+        }
+
+        .countdown-bg { fill: none; stroke: rgba(255,255,255,0.05); stroke-width: 4; }
+        .countdown-progress {
+            fill: none;
+            stroke: var(--primary);
+            stroke-width: 4;
+            stroke-dasharray: 502.4; /* 2 * PI * 80 */
+            stroke-dashoffset: 0;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1s linear;
+        }
+
+        .timer-val {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 64px;
+            font-weight: 900;
+            color: #fff;
+            text-shadow: 0 0 20px rgba(0, 210, 255, 0.5);
+        }
+
+        .redirect-title {
+            font-size: 40px;
+            font-weight: 900;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+        }
+
+        .redirect-info {
+            color: var(--text-dim);
+            font-size: 18px;
+            margin-bottom: 50px;
+            max-width: 500px;
+            line-height: 1.6;
+        }
+
+        .btn-back {
+            margin-top: 40px;
+            background: transparent;
+            color: var(--text-dim);
             border: 1px solid var(--glass-border);
-            padding: 16px 32px;
-            border-radius: 20px;
-            color: white;
-            z-index: 1000;
-            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-            pointer-events: none;
+            padding: 15px 30px;
+            border-radius: 100px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 14px;
         }
 
-        #custom-toast.show {
-            transform: translateX(-50%) translateY(0);
-        }
+        .btn-back:hover { color: #fff; border-color: #fff; }
 
         footer {
-            margin-top: 120px;
+            margin-top: 150px;
+            padding-bottom: 50px;
             color: var(--text-dim);
-            font-size: 14px;
-            letter-spacing: 2px;
-            opacity: 0.5;
+            font-size: 12px;
+            letter-spacing: 5px;
+            opacity: 0.4;
+            text-align: center;
         }
 
-        /* 动画 */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(40px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        /* 动画定义 */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
 
-        @media (max-width: 992px) {
+        @media (max-width: 1024px) {
             .features-grid { grid-template-columns: 1fr; }
-            .hero-section h1 { font-size: 70px; }
-            .wrapper { padding: 60px 20px; }
+            .hero-section h1 { font-size: 80px; }
+            .wrapper { padding-top: 60px; }
+            .btn { min-width: 100%; }
         }
     </style>
 </head>
 <body>
 
-    <div class="bg-glow"></div>
+    <!-- 背景装饰 -->
+    <div class="bg-layer"></div>
+    <div class="grid-overlay"></div>
     <div id="particles-js"></div>
 
-    <div class="wrapper">
-        <header class="hero-section">
-            <span class="hero-badge">PREMIUM INTERACTIVE SYSTEM</span>
-            <h1>Fight</h1>
-            <p>释放您的枪灵 · 颠覆视界</p>
-        </header>
+    <!-- 首页容器 -->
+    <div id="page-home" class="page active">
+        <div class="wrapper">
+            <header class="hero-section">
+                <span class="hero-badge">Next-Gen Interface System</span>
+                <h1>Fight</h1>
+                <p>释放您的枪灵 · 颠覆视界</p>
+            </header>
 
-        <main class="features-grid">
-            <div class="feature-card">
-                <div class="icon-box"><i class="fa-solid fa-bolt-lightning"></i></div>
-                <h3>极致视觉</h3>
-                <p>基于原生引擎的超低延迟渲染，为您呈现细腻丝滑的动态效果，不仅是工具，更是视觉盛宴。</p>
-            </div>
-
-            <div class="feature-card">
-                <div class="icon-box"><i class="fa-solid fa-microchip"></i></div>
-                <h3>核心驱动</h3>
-                <p>自研毫秒级响应算法，支持多维实体精准追踪。静默运行优化，在幕后为您护航每一场战斗。</p>
-            </div>
-
-            <div class="feature-card">
-                <div class="icon-box"><i class="fa-solid fa-shield-halved"></i></div>
-                <h3>安全屏障</h3>
-                <p>内核级碎片化加密体系，确保数据传输的绝对隐私。无冗余插件，打造极致纯净的使用环境。</p>
-            </div>
-        </main>
-
-        <section class="cta-container">
-            <!-- 收藏按钮 -->
-            <button class="btn btn-fav" onclick="handleFavorite()">
-                <i class="fa-regular fa-star"></i>
-                <div class="btn-content">
-                    <span class="btn-title">收藏本页</span>
-                    <span class="btn-sub">Add to Bookmarks</span>
+            <main class="features-grid">
+                <div class="feature-card">
+                    <div class="icon-box"><i class="fa-solid fa-eye"></i></div>
+                    <h3>极致视觉</h3>
+                    <p>原生引擎驱动的超低延迟渲染技术。通过多层混合架构，为您呈现细腻丝滑的动态效果，不仅是工具，更是视觉艺术品。</p>
                 </div>
-            </button>
 
-            <a href="https://www.123912.com/s/N3EGTd-XYEpH" class="btn btn-main" target="_blank">
-                <i class="fa-solid fa-download"></i>
-                <div class="btn-content">
-                    <span class="btn-title">获取客户端</span>
-                    <span class="btn-sub">V1.1 Stable Build</span>
+                <div class="feature-card">
+                    <div class="icon-box"><i class="fa-solid fa-brain"></i></div>
+                    <h3>智能算法</h3>
+                    <p>自研神经响应引擎，支持毫秒级多实体预测追踪。即便在极端环境下，也能保持绝对的稳定与精准。</p>
                 </div>
-            </a>
 
-            <a href="https://buy.jry0.com/shop/Cat" class="btn btn-buy" target="_blank">
-                <i class="fa-solid fa-fire-flame-curved"></i>
-                <div class="btn-content">
-                    <span class="btn-title">进入卡网</span>
-                    <span class="btn-sub">7×24h Instant Delivery</span>
+                <div class="feature-card">
+                    <div class="icon-box"><i class="fa-solid fa-ghost"></i></div>
+                    <h3>静默护卫</h3>
+                    <p>基于内核级的碎片化加密体系。不占资源、不留痕迹，为您打造极致纯净且无法被察觉的安全运行空间。</p>
                 </div>
-            </a>
-        </section>
+            </main>
 
-        <footer>
-            &copy; 2026 FIGHT PROJECT. ALL RIGHTS RESERVED.
-        </footer>
+            <section class="cta-container">
+                <button class="btn btn-main" onclick="handleNavigation('https://www.123912.com/s/N3EGTd-XYEpH', '正在准备客户端资源...')">
+                    <i class="fa-solid fa-cloud-arrow-down"></i>
+                    <div class="btn-content">
+                        <span class="btn-title">获取客户端</span>
+                        <span class="btn-sub">V1.1 Stable Build</span>
+                    </div>
+                </button>
+
+                <button class="btn btn-buy" onclick="handleNavigation('https://buy.jry0.com/shop/Cat', '正在连接卡网中心...')">
+                    <i class="fa-solid fa-credit-card"></i>
+                    <div class="btn-content">
+                        <span class="btn-title">进入卡网</span>
+                        <span class="btn-sub">7×24h Instant Delivery</span>
+                    </div>
+                </button>
+            </section>
+
+            <footer>&copy; 2026 FIGHT PROJECT. DEFINING THE FUTURE.</footer>
+        </div>
     </div>
 
-    <!-- 提示框 -->
-    <div id="custom-toast">请按 Ctrl + D 收藏本页</div>
+    <!-- 跳转重定向容器 -->
+    <div id="page-redirect" class="page">
+        <div class="redirect-wrapper">
+            <div class="countdown-container">
+                <svg class="countdown-svg" width="180" height="180">
+                    <circle class="countdown-bg" cx="90" cy="90" r="80" />
+                    <circle id="progress-ring" class="countdown-progress" cx="90" cy="90" r="80" />
+                </svg>
+                <div id="timer-display" class="timer-val">3</div>
+            </div>
+            
+            <h2 id="redirect-status" class="redirect-title">安全校验中</h2>
+            <p class="redirect-info">正在为您建立加密隧道，连接至目标服务器。请勿关闭此窗口以确保握手协议完整。</p>
 
-    <!-- 粒子脚本 -->
+            <div class="cta-container">
+                <button class="btn" style="background: rgba(255,255,255,0.05);" id="manual-go">
+                    <span class="btn-title">跳过等待</span>
+                </button>
+            </div>
+
+            <button class="btn-back" onclick="goBack()">
+                <i class="fa-solid fa-chevron-left"></i> 取消并返回
+            </button>
+        </div>
+    </div>
+
+    <!-- 脚本部分 -->
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <script>
+        // 粒子背景初始化
         particlesJS('particles-js', {
             "particles": {
-                "number": { "value": 60, "density": { "enable": true, "value_area": 800 } },
-                "color": { "value": "#ffffff" },
-                "shape": { "type": "circle" },
-                "opacity": { "value": 0.1, "random": true },
+                "number": { "value": 50, "density": { "enable": true, "value_area": 800 } },
+                "color": { "value": "#00d2ff" },
+                "opacity": { "value": 0.2, "random": true },
                 "size": { "value": 2, "random": true },
-                "line_linked": { "enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.05, "width": 1 },
-                "move": { "enable": true, "speed": 1, "direction": "none", "random": true, "out_mode": "out" }
+                "line_linked": { "enable": true, "distance": 150, "color": "#00d2ff", "opacity": 0.1, "width": 1 },
+                "move": { "enable": true, "speed": 0.8, "direction": "top", "out_mode": "out" }
             },
             "interactivity": {
-                "events": { "onhover": { "enable": true, "mode": "grab" } },
-                "modes": { "grab": { "distance": 140, "line_linked": { "opacity": 0.2 } } }
+                "events": { "onhover": { "enable": true, "mode": "bubble" } },
+                "modes": { "bubble": { "distance": 200, "size": 4, "duration": 2, "opacity": 0.4 } }
             }
         });
 
-        // 磁性卡片效果
+        let timerRef = null;
+        let targetUrl = "";
+
+        // 导航处理
+        function handleNavigation(url, msg) {
+            targetUrl = url;
+            document.getElementById('redirect-status').innerText = msg;
+            document.getElementById('manual-go').onclick = () => window.location.href = url;
+
+            const home = document.getElementById('page-home');
+            const redirect = document.getElementById('page-redirect');
+
+            // 切换动画
+            home.classList.remove('active');
+            setTimeout(() => {
+                home.style.display = 'none';
+                redirect.style.display = 'flex';
+                setTimeout(() => {
+                    redirect.classList.add('active');
+                    startCountdown();
+                }, 50);
+            }, 600);
+        }
+
+        // 倒计时逻辑
+        function startCountdown() {
+            let count = 3;
+            const display = document.getElementById('timer-display');
+            const ring = document.getElementById('progress-ring');
+            const total = 502.4;
+
+            display.innerText = count;
+            ring.style.strokeDashoffset = 0;
+
+            timerRef = setInterval(() => {
+                count--;
+                display.innerText = count;
+                
+                // 环形进度
+                let offset = total * (1 - count / 3);
+                ring.style.strokeDashoffset = offset;
+
+                if (count <= 0) {
+                    clearInterval(timerRef);
+                    window.location.href = targetUrl;
+                }
+            }, 1000);
+        }
+
+        // 返回逻辑
+        function goBack() {
+            clearInterval(timerRef);
+            const home = document.getElementById('page-home');
+            const redirect = document.getElementById('page-redirect');
+
+            redirect.classList.remove('active');
+            setTimeout(() => {
+                redirect.style.display = 'none';
+                home.style.display = 'flex';
+                setTimeout(() => {
+                    home.classList.add('active');
+                }, 50);
+            }, 600);
+        }
+
+        // 卡片交互监听（动态坐标计算）
         document.querySelectorAll('.feature-card').forEach(card => {
             card.addEventListener('mousemove', e => {
                 const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
+                const x = ((e.clientX - rect.left) / rect.width) * 100;
+                const y = ((e.clientY - rect.top) / rect.height) * 100;
+                card.style.setProperty('--x', `${x}%`);
+                card.style.setProperty('--y', `${y}%`);
                 
-                card.style.setProperty('--mouse-x', `${x}px`);
-                card.style.setProperty('--mouse-y', `${y}px`);
-
+                // 3D 倾斜
                 const centerX = rect.width / 2;
                 const centerY = rect.height / 2;
-                const rotateX = (y - centerY) / 10;
-                const rotateY = (centerX - x) / 10;
-
-                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-5px)`;
+                const rotateX = (e.clientY - rect.top - centerY) / 15;
+                const rotateY = (centerX - (e.clientX - rect.left)) / 15;
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-10px)`;
             });
 
             card.addEventListener('mouseleave', () => {
                 card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0)`;
             });
         });
-
-        // 收藏功能逻辑
-        function handleFavorite() {
-            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-            const toast = document.getElementById('custom-toast');
-            
-            if (isMobile) {
-                toast.innerText = "请点击浏览器菜单中的星标进行收藏";
-            } else {
-                toast.innerText = "请按下 Ctrl + D 收藏本页";
-            }
-            
-            toast.classList.add('show');
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
-        }
     </script>
 </body>
 </html>
